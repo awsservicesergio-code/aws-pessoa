@@ -1,0 +1,43 @@
+# ==========================================
+# CONFIGURAÇÕES GERAIS E GLOBAIS (APLICADAS A TODOS OS PERFIS)
+# ==========================================
+server:
+  port: 8082
+
+spring:
+  application:
+    name: pessoa
+  profiles:
+    active: local # Perfil padrão ao iniciar a aplicação
+
+---
+# ==========================================
+# CONFIGURAÇÃO LOCAL (LOCALSTACK)
+# ==========================================
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      credentials:
+        access-key: test
+        secret-key: test
+      sqs:
+        endpoint: http://localhost:4566
+
+---
+# ==========================================
+# CONFIGURAÇÃO DE PRODUÇÃO (AWS REAL)
+# ==========================================
+spring:
+  config:
+    activate:
+      on-profile: aws
+  cloud:
+    aws:
+      region:
+        static: us-east-1 # Substitua pela sua região da AWS em produção
+      # Em produção, as credenciais são omitidas para usar a IAM Role automática do ECS/EKS/EC2
