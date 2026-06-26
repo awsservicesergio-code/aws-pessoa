@@ -43,6 +43,19 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -61,8 +74,22 @@
 			<artifactId>spring-cloud-aws-sqs</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>software.amazon.glue</groupId>
+			<artifactId>schema-registry-serde</artifactId>
+			<version>1.1.27</version>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>glue</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -130,7 +157,7 @@
 			<plugin>
 				<groupId>org.apache.avro</groupId>
 				<artifactId>avro-maven-plugin</artifactId>
-				<version>1.11.3</version>
+				<version>1.11.3</version> <!-- Alinhe com a versão da dependência do Avro -->
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
@@ -138,8 +165,13 @@
 							<goal>schema</goal>
 						</goals>
 						<configuration>
+							<!-- Onde o plugin vai procurar os arquivos .avsc -->
 							<sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
+							<!-- Onde as classes Java geradas serão salvas -->
 							<outputDirectory>${project.build.directory}/generated-sources/avro/</outputDirectory>
+							<!-- Configurações adicionais opcionais -->
+							<stringType>String</stringType> <!-- Evita a geração do tipo Utf8 do Avro -->
+							<createSetters>true</createSetters>
 						</configuration>
 					</execution>
 				</executions>

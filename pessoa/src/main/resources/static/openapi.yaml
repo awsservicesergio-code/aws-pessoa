@@ -1,0 +1,39 @@
+openapi: 3.0.3
+
+info:
+  title: API de Gerenciamento de Pessoas
+  version: 1.0.0
+
+paths:
+  /api/v1/pessoas:
+    post:
+      tags:
+        - Pessoas
+      summary: Cadastra uma lista de novas pessoas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PessoaDTO'
+      responses:
+        '201':
+          description: Criado com sucesso
+
+components:
+  schemas:
+    PessoaDTO:
+      type: object
+      required:
+        - nome
+        - cpf
+      properties:
+        id:
+          type: string
+          readOnly: true
+        nome:
+          type: string
+        cpf:
+          type: string

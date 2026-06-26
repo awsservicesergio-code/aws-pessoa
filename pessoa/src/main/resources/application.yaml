@@ -1,19 +1,15 @@
-# ==========================================
-# CONFIGURAÇÕES GERAIS E GLOBAIS (APLICADAS A TODOS OS PERFIS)
-# ==========================================
 server:
   port: 8082
 
 spring:
   application:
     name: pessoa
+
   profiles:
-    active: local # Perfil padrão ao iniciar a aplicação
+    active: local
 
 ---
-# ==========================================
-# CONFIGURAÇÃO LOCAL (LOCALSTACK)
-# ==========================================
+
 spring:
   config:
     activate:
@@ -28,10 +24,20 @@ spring:
       sqs:
         endpoint: http://localhost:4566
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9997/realms/pessoa-realm
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui/index.html
+
 ---
-# ==========================================
-# CONFIGURAÇÃO DE PRODUÇÃO (AWS REAL)
-# ==========================================
+
 spring:
   config:
     activate:
@@ -39,5 +45,15 @@ spring:
   cloud:
     aws:
       region:
-        static: us-east-1 # Substitua pela sua região da AWS em produção
-      # Em produção, as credenciais são omitidas para usar a IAM Role automática do ECS/EKS/EC2
+        static: us-east-1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9997/realms/pessoa-realm
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui/index.html

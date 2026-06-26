@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "PessoaAvro",
+  "namespace": "com.pessoa.resources.avro",
+  "doc": "Esquema para registro e trafego de dados de PessoaDTO via AWS SQS.",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "doc": "Identificador único da pessoa."
+    },
+    {
+      "name": "nome",
+      "type": "string",
+      "doc": "Nome completo da pessoa."
+    },
+    {
+      "name": "cpf",
+      "type": "string",
+      "doc": "Cadastro de Pessoas Físicas (apenas números)."
+    }
+  ]
+}
