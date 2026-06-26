@@ -2,6 +2,7 @@ package com.pessoa.aws.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -11,7 +12,9 @@ import java.net.URI;
 
 @Configuration
 public class AwsSqsConfig {
+
     @Bean
+    @Profile("local")
     public SqsAsyncClient sqsAsyncClient() {
         return SqsAsyncClient.builder()
                 .endpointOverride(
@@ -26,6 +29,15 @@ public class AwsSqsConfig {
                                 )
                         )
                 )
+                .build();
+    }
+
+    @Bean
+    @Profile("aws")
+    public SqsAsyncClient sqsAsyncClientAws() {
+
+        return SqsAsyncClient.builder()
+                .region(Region.US_EAST_1)
                 .build();
     }
 }
