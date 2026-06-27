@@ -30,9 +30,14 @@ public class PessoaServiceImpl implements IPessoaService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+
+        String s3Key = pessoaDTO.getCpf() + "/" + arquivo.getOriginalFilename();
         pessoaDTO.setId(UUID.randomUUID().toString());
+        pessoaDTO.setS3Key(s3Key);
+
         pessoaProducer.enviarToSQS(pessoaDTO);
         s3StorageService.enviarToS3(pessoaDTO, arquivo);
+
         return pessoaDTO;
     }
 }

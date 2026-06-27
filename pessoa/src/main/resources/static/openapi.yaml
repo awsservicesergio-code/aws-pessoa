@@ -38,7 +38,8 @@ paths:
                   example: |
                     {
                       "nome": "João da Silva",
-                      "cpf": "12345678900"
+                      "cpf": "12345678900",
+                      "s3Key": "12345678900/teste.pdf"
                     }
                 arquivo:
                   type: string
@@ -72,3 +73,6 @@ components:
         cpf:
           type: string
           example: "12345678900"
+        s3Key:
+          type: string
+          "example": "12345678900/teste.pdf"

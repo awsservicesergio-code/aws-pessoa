@@ -9,6 +9,7 @@ public class PessoaMapper {
                 .setId(dto.getId())
                 .setNome(dto.getNome())
                 .setCpf(dto.getCpf())
+                .setS3Key(dto.getS3Key())
                 .build();
     }
 }

@@ -18,6 +18,12 @@
       "name": "cpf",
       "type": "string",
       "doc": "Cadastro de Pessoas Físicas (apenas números)."
+    },
+    {
+      "name": "s3Key",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "Key do s3 aws"
     }
   ]
 }

@@ -15,9 +15,10 @@ import org.springframework.validation.annotation.Validated;
 @AllArgsConstructor
 public class PessoaDTO {
     private String id;
-    @NotBlank(message = "Nome must not be null or empty")
+    @NotBlank(message = "Nome não pode ser nulo ou vazio")
     private String nome;
     @CPF
-    @NotBlank(message = "CPF must not be null or empty")
+    @NotBlank(message = "CPF não pode ser nulo ou vazio")
     private String cpf;
+    private String s3Key;
 }
