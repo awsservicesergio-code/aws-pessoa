@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +20,12 @@ import java.util.Map;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    /**
+     * Método responsável pelo filtro de segurança das requisições ao sistema.
+     * @param http
+     * @return SecurityFilterChaon
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -36,6 +41,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Método responsável pela autenticação no keycloak.
+     * @return JwtAuthenticationConverter
+     */
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();

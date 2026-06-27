@@ -4,6 +4,12 @@ import com.pessoa.resources.avro.PessoaAvro;
 import com.pessoa.dto.PessoaDTO;
 
 public class PessoaMapper {
+
+    /**
+     * Método responsável mapear classe PessoaDTO para PessoaAvro.
+     * @param dto
+     * @return PessoaAvro
+     */
     public static PessoaAvro toAvro(PessoaDTO dto) {
         return PessoaAvro.newBuilder()
                 .setId(dto.getId())

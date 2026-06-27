@@ -35,8 +35,8 @@ public class PessoaServiceImpl implements IPessoaService {
         pessoaDTO.setId(UUID.randomUUID().toString());
         pessoaDTO.setS3Key(s3Key);
 
-        pessoaProducer.enviarToSQS(pessoaDTO);
         s3StorageService.enviarToS3(pessoaDTO, arquivo);
+        pessoaProducer.enviarToSQS(pessoaDTO);
 
         return pessoaDTO;
     }

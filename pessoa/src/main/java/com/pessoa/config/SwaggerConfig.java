@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
+    /**
+     * Método responsável por obter e configurar informações para a tela de documentação (swagger) das requisições do sistema.
+     * @return
+     */
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()

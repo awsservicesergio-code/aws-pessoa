@@ -5,11 +5,15 @@ import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
-
 import java.io.ByteArrayOutputStream;
 
 public class SerializerAvro {
 
+    /**
+     * Método responsável por serializar o Avro.
+     * @param pessoaAvro
+     * @return byte[]
+     */
     public static byte[] serialize(PessoaAvro pessoaAvro) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();

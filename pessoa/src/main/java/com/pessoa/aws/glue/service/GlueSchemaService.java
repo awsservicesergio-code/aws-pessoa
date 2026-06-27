@@ -15,6 +15,11 @@ public class GlueSchemaService {
 
     private final GlueClient glueClient;
 
+    /**
+     * Método responsável por obter o Schema Registry na aws do AWS GLUE Schema Registry.
+     * @param schemaDefinition
+     * @return String
+     */
     public String obterSchemaVersionId(String schemaDefinition) {
         RegisterSchemaVersionRequest request =
                 RegisterSchemaVersionRequest.builder()

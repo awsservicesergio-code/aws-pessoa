@@ -7,6 +7,11 @@ import software.amazon.awssdk.services.glue.GlueClient;
 
 @Configuration
 public class GlueConfig {
+
+    /**
+     * Método responsável pela configuração do bean aws do GlueClient.
+     * @return GlueClient
+     */
     @Bean
     public GlueClient glueClient() {
         return GlueClient.builder()

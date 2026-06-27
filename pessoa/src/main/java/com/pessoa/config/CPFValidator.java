@@ -5,6 +5,12 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class CPFValidator implements ConstraintValidator<CPF, String> {
 
+    /**
+     * Método responsável por validar o CPF.
+     * @param cpf object to validate
+     * @param context context in which the constraint is evaluated
+     * @return boolean
+     */
     @Override
     public boolean isValid(String cpf, ConstraintValidatorContext context) {
 

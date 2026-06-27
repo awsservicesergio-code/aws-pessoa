@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CPF {
-    String message() default "CPF is invalid";
+    String message() default "CPF inválido";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

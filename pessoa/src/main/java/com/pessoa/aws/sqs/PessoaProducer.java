@@ -7,14 +7,11 @@ import com.pessoa.aws.avro.SerializerAvro;
 import com.pessoa.aws.glue.service.GlueSchemaService;
 import com.pessoa.aws.payload.AvroEnvelope;
 import com.pessoa.dto.PessoaDTO;
-import com.pessoa.error.exceptions.SqsErrorException;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import com.pessoa.resources.avro.PessoaAvro;
-
-import java.time.Duration;
 import java.util.Base64;
 
 @Service
@@ -26,16 +23,14 @@ public class PessoaProducer implements IPessoaProducer{
     private final StringRedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
 
+    /**
+     * Método responsável pelo envio do payload ao aws sqs.
+     * @param pessoaDTO
+     * @throws JsonProcessingException
+     */
     @Override
     public void enviarToSQS(PessoaDTO pessoaDTO) throws JsonProcessingException {
-
         String idempotencyKey = pessoaDTO.getCpf();
-        Boolean isIdempotent = redisTemplate.opsForValue()
-                .setIfAbsent(idempotencyKey, "PROCESSANDO", Duration.ofHours(1));
-
-        if (Boolean.FALSE.equals(isIdempotent)) {
-           throw new SqsErrorException("CPF já cadastrado.");
-        }
 
         try {
             PessoaAvro pessoaAvro = PessoaMapper.toAvro(pessoaDTO);
@@ -46,7 +41,6 @@ public class PessoaProducer implements IPessoaProducer{
                     .payload(Base64.getEncoder().encodeToString(avroBytes)).build();
 
             String body = objectMapper.writeValueAsString(envelope);
-
 
             sqsTemplate.send(sqsSendOptions -> sqsSendOptions
                     .queue("pessoa.fifo")
