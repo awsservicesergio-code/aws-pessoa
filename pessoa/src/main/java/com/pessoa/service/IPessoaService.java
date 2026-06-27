@@ -1,8 +1,10 @@
 package com.pessoa.service;
 
 import com.pessoa.dto.PessoaDTO;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface IPessoaService {
-    List<PessoaDTO> save(List<PessoaDTO> pessoaDTO);
+    PessoaDTO save(String pessoa, MultipartFile arquivo) throws IOException;
 }

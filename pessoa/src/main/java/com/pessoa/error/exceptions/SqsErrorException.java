@@ -11,6 +11,6 @@ public class SqsErrorException extends RuntimeException{
     }
 
     public SqsErrorException(){
-        super("Error while sending sqs");
+        super("Erro ao enviar payload ao sqs");
     }
 }

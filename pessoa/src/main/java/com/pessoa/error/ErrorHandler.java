@@ -1,5 +1,6 @@
 package com.pessoa.error;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pessoa.error.exceptions.SqsErrorException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,16 @@ public class ErrorHandler {
 
     @ExceptionHandler(SqsErrorException.class)
     public ResponseEntity<String> handleSqsErrorException(SqsErrorException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<String> handleJsonProcessingException(JsonProcessingException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 

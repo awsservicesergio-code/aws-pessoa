@@ -1,26 +1,59 @@
 openapi: 3.0.3
 
 info:
-  title: API de Gerenciamento de Pessoas
+  title: Pessoa API
+  description: API para cadastro de pessoas com upload de arquivo.
   version: 1.0.0
+
+servers:
+  - url: http://localhost:8082
+
+tags:
+  - name: Pessoa
+    description: Operações relacionadas a pessoas
 
 paths:
   /api/v1/pessoas:
     post:
       tags:
-        - Pessoas
-      summary: Cadastra uma lista de novas pessoas
+        - Pessoa
+      summary: Cadastrar pessoa com arquivo
+      description: |
+        Recebe os dados da pessoa juntamente com um arquivo.
+        O arquivo será processado e pode ser armazenado no S3.
+      operationId: criarPessoa
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/PessoaDTO'
+              type: object
+              required:
+                - pessoa
+                - arquivo
+              properties:
+                pessoa:
+                  type: string
+                  description: JSON da pessoa
+                  example: |
+                    {
+                      "nome": "João da Silva",
+                      "cpf": "12345678900"
+                    }
+                arquivo:
+                  type: string
+                  format: binary
       responses:
         '201':
-          description: Criado com sucesso
+          description: Pessoa cadastrada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PessoaDTO'
+        '400':
+          description: Requisição inválida
+        '500':
+          description: Erro interno do servidor
 
 components:
   schemas:
@@ -35,5 +68,7 @@ components:
           readOnly: true
         nome:
           type: string
+          example: João da Silva
         cpf:
           type: string
+          example: "12345678900"
