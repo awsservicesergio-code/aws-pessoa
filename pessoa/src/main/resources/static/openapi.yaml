@@ -12,15 +12,18 @@ tags:
   - name: Pessoa
     description: Operações relacionadas a pessoas
 
+security:
+  - KeycloakAuth: []
+
 paths:
   /api/v1/pessoas:
     post:
       tags:
         - Pessoa
-      summary: Cadastrar pessoa com arquivo
+      summary: Cadastrar pessoa com arquivo.
       description: |
         Recebe os dados da pessoa juntamente com um arquivo.
-        O arquivo será processado e pode ser armazenado no S3.
+        O arquivo será processado e armazenado no S3 da AWS.
       operationId: criarPessoa
       requestBody:
         required: true
@@ -34,27 +37,59 @@ paths:
               properties:
                 pessoa:
                   type: string
-                  description: JSON da pessoa
+                  description: Json da pessoa contendo nome e cpf.
                   example: |
                     {
                       "nome": "João da Silva",
-                      "cpf": "12345678900",
-                      "s3Key": "12345678900/teste.pdf"
+                      "cpf": "12345678900"
                     }
                 arquivo:
                   type: string
                   format: binary
       responses:
         '201':
-          description: Pessoa cadastrada com sucesso
+          description: Pessoa cadastrada com sucesso.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PessoaDTO'
         '400':
-          description: Requisição inválida
+          description: Requisição inválida.
         '500':
-          description: Erro interno do servidor
+          description: Erro interno do servidor.
+  /api/v1/pessoas/buscar:
+    post:
+      tags:
+        - Pessoa
+      summary: Buscar pessoa com arquivo por dado sensível cpf.
+      description: |
+        Recebe o cpf da pessoa e busca os dados do DynamoDB e arquivo do S3 da AWS.
+      operationId: buscarPessoa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cpf
+              properties:
+                cpf:
+                  type: string
+                  description: CPF da pessoa para busca
+                  example: "12345678900"
+      responses:
+        '200':
+          description: Sucesso ao retornar a pessoa.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PessoaDTO'
+        '400':
+          description: Requisição inválida.
+        '500':
+          description: Erro interno do servidor.
+
 
 components:
   schemas:
@@ -76,3 +111,10 @@ components:
         s3Key:
           type: string
           "example": "12345678900/teste.pdf"
+  securitySchemes:
+    KeycloakAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Insira o token JWT gerado pelo Keycloak (sem a palavra 'Bearer').
+

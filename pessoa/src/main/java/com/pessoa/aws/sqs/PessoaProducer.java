@@ -43,7 +43,7 @@ public class PessoaProducer implements IPessoaProducer{
             String body = objectMapper.writeValueAsString(envelope);
 
             sqsTemplate.send(sqsSendOptions -> sqsSendOptions
-                    .queue("pessoa.fifo")
+                    .queue("pessoa-create.fifo")
                     .payload(body)
                     .header("message-group-id", "pessoa")
                     .header("message-deduplication-id", idempotencyKey)

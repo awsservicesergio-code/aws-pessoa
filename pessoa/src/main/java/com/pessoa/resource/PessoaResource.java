@@ -1,5 +1,6 @@
 package com.pessoa.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pessoa.dto.PessoaDTO;
 import com.pessoa.service.IPessoaService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,15 @@ public class PessoaResource {
                                           @RequestPart("arquivo") MultipartFile arquivo) throws IOException {
         PessoaDTO response = pessoaService.save(pessoa, arquivo);
         return ResponseEntity.status(HttpStatus.CREATED).header("Id", response.getId()).body(response);
+    }
+
+    /**
+     * Método responsável por buscar Pessoa e arquivo pelo cpf da Pessoa no DynamoDB e posteriormente o arquivo no S3.
+     * @param cpf
+     * @return
+     */
+    @PostMapping(path = "/buscar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PessoaDTO> getPessoa(@RequestBody String cpf) throws JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(pessoaService.buscarPessoa(cpf));
     }
 }

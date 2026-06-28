@@ -2,8 +2,29 @@
   "type": "record",
   "name": "PessoaAvro",
   "namespace": "com.pessoa.resources.avro",
-  "doc": "Esquema para registro e trafego de dados de PessoaDTO via AWS SQS.",
+  "doc": "v1 - Evento de Pessoa via AWS SQS + Glue Schema Registry",
   "fields": [
+    {
+      "name": "eventId",
+      "type": "string",
+      "doc": "UUID único do evento para idempotência"
+    },
+    {
+      "name": "eventType",
+      "type": {
+        "type": "enum",
+        "name": "EventType",
+        "symbols": ["CREATE", "UPDATE", "DELETE"]
+      }
+    },
+    {
+      "name": "timestamp",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Timestamp do evento"
+    },
     {
       "name": "id",
       "type": "string",
@@ -23,7 +44,7 @@
       "name": "s3Key",
       "type": ["null", "string"],
       "default": null,
-      "doc": "Key do s3 aws"
+      "doc": "Key do S3 AWS"
     }
   ]
 }
