@@ -1,12 +1,13 @@
-package com.pessoa.aws.sqs;
+package com.pessoa.aws.sqs.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pessoa.Mapper.PessoaMapper;
-import com.pessoa.aws.avro.SerializerAvro;
+import com.pessoa.aws.avro.serializer.SerializerAvro;
 import com.pessoa.aws.glue.service.GlueSchemaService;
 import com.pessoa.aws.payload.AvroEnvelope;
 import com.pessoa.dto.PessoaDTO;
+import com.pessoa.resources.avro.EventType;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -42,16 +43,39 @@ public class PessoaProducer implements IPessoaProducer{
 
             String body = objectMapper.writeValueAsString(envelope);
 
-            sqsTemplate.send(sqsSendOptions -> sqsSendOptions
-                    .queue("pessoa-create.fifo")
-                    .payload(body)
-                    .header("message-group-id", "pessoa")
-                    .header("message-deduplication-id", idempotencyKey)
-            );
+            if (pessoaDTO.getEventType() != EventType.READ) {
+                sqsTemplate.send(sqsSendOptions -> sqsSendOptions
+                        .queue(filaSQSParaEnvioDoPayload(pessoaDTO))
+                        .payload(body)
+                        .header("message-group-id", "pessoa")
+                        .header("message-deduplication-id", idempotencyKey)
+                );
+            } else {
+                sqsTemplate.send(sqsSendOptions -> sqsSendOptions
+                        .queue(filaSQSParaEnvioDoPayload(pessoaDTO))
+                        .payload(body)
+                );
+            }
+
         } catch (Exception ex) {
             redisTemplate.delete(idempotencyKey);
             throw ex;
         }
+    }
 
+    /**
+     * Método responsável por selecionar a fila ao qual será enviada a mensagem de acordo com o tipo de evento.
+     * @param pessoaDTO
+     * @return String
+     */
+    private String filaSQSParaEnvioDoPayload(PessoaDTO pessoaDTO){
+        String retorno = null;
+        switch (pessoaDTO.getEventType()){
+            case CREATE -> {retorno = "pessoa-create.fifo";}
+            case READ -> {retorno = "pessoa-read";}
+            case UPDATE -> {retorno = "pessoa-update.fifo";}
+            case DELETE -> {retorno = "pessoa-delete.fifo";}
+        }
+        return retorno;
     }
 }

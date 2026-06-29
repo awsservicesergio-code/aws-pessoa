@@ -1,4 +1,4 @@
-package com.pessoa.aws.avro;
+package com.pessoa.aws.avro.serializer;
 
 import com.pessoa.resources.avro.PessoaAvro;
 import org.apache.avro.io.BinaryEncoder;

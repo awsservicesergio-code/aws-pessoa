@@ -14,7 +14,7 @@
       "type": {
         "type": "enum",
         "name": "EventType",
-        "symbols": ["CREATE", "UPDATE", "DELETE"]
+        "symbols": ["CREATE", "READ", "UPDATE", "DELETE"]
       }
     },
     {

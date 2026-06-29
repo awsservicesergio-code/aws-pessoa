@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pessoa.aws.s3.service.IS3StorageService;
-import com.pessoa.aws.sqs.IPessoaProducer;
+import com.pessoa.aws.sqs.producer.IPessoaProducer;
 import com.pessoa.dto.PessoaDTO;
 import com.pessoa.resources.avro.EventType;
 import com.pessoa.service.IPessoaService;
@@ -34,7 +34,7 @@ public class PessoaServiceImpl implements IPessoaService {
      */
     @Override
     public PessoaDTO save(String pessoa, MultipartFile arquivo) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        String uuid = UUID.randomUUID().toString();
         PessoaDTO pessoaDTO = mapper.readValue(pessoa, PessoaDTO.class);
         var violations = validator.validate(pessoaDTO);
         if (!violations.isEmpty()) {
@@ -42,9 +42,9 @@ public class PessoaServiceImpl implements IPessoaService {
         }
 
         String s3Key = pessoaDTO.getCpf() + "/" + arquivo.getOriginalFilename();
-        pessoaDTO.setId(UUID.randomUUID().toString());
+        pessoaDTO.setId(uuid);
         pessoaDTO.setS3Key(s3Key);
-        pessoaDTO.setEventId(UUID.randomUUID().toString());
+        pessoaDTO.setEventId(uuid);
         pessoaDTO.setEventType(EventType.CREATE);
         pessoaDTO.setTimestamp(System.currentTimeMillis());
 
@@ -54,20 +54,4 @@ public class PessoaServiceImpl implements IPessoaService {
         return pessoaDTO;
     }
 
-    /**
-     * Método responsável por buscar Pessoa e arquivo pelo cpf da Pessoa no DynamoDB e posteriormente o arquivo no S3.
-     * @param cpf
-     * @return PessoaDTO
-     */
-    @Override
-    public PessoaDTO buscarPessoa(String cpf) throws JsonProcessingException {
-        JsonNode jsonNode = mapper.readTree(cpf);
-        String valorCpf = jsonNode.get("cpf").asText();
-        PessoaDTO pessoaDTO = PessoaDTO.builder().nome("John Doe").cpf(valorCpf).build(); //Apenas para validar o cpf.
-        var violations = validator.validate(pessoaDTO);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-        return pessoaDTO;
-    }
 }

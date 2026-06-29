@@ -2,6 +2,7 @@ package com.pessoa.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pessoa.dto.PessoaDTO;
+import com.pessoa.service.IPessoaConsultaService;
 import com.pessoa.service.IPessoaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 
 @RestController
@@ -18,6 +21,7 @@ import java.io.IOException;
 public class PessoaResource {
 
     private final IPessoaService pessoaService;
+    private final IPessoaConsultaService pessoaConsultaService;
 
     /**
      * Método responsável por receber requisições de save do cadastro de pessoas.
@@ -36,10 +40,10 @@ public class PessoaResource {
     /**
      * Método responsável por buscar Pessoa e arquivo pelo cpf da Pessoa no DynamoDB e posteriormente o arquivo no S3.
      * @param cpf
-     * @return
+     * @return ResponseEntity<PessoaDTO>
      */
     @PostMapping(path = "/buscar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PessoaDTO> getPessoa(@RequestBody String cpf) throws JsonProcessingException {
-        return ResponseEntity.status(HttpStatus.OK).body(pessoaService.buscarPessoa(cpf));
+    public ResponseEntity<PessoaDTO> getPessoa(@RequestBody String cpf) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+        return ResponseEntity.status(HttpStatus.OK).body(pessoaConsultaService.buscarPessoa(cpf));
     }
 }

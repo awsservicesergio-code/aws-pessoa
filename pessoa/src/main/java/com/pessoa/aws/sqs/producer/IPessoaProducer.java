@@ -1,4 +1,4 @@
-package com.pessoa.aws.sqs;
+package com.pessoa.aws.sqs.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pessoa.dto.PessoaDTO;
