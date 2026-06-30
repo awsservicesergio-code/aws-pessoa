@@ -3,8 +3,11 @@ package com.pessoa.service.Impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pessoa.Mapper.PessoaMapper;
+import com.pessoa.aws.s3.service.IS3StorageService;
 import com.pessoa.aws.sqs.producer.IPessoaProducer;
 import com.pessoa.dto.PessoaDTO;
+import com.pessoa.dto.PessoaS3DTO;
 import com.pessoa.resources.avro.EventType;
 import com.pessoa.service.IPessoaConsultaService;
 import jakarta.validation.ConstraintViolationException;
@@ -22,16 +25,17 @@ public class PessoaConsultaServiceImpl implements IPessoaConsultaService {
     private final IPessoaProducer pessoaProducer;
     private final ObjectMapper mapper;
     private final Validator validator;
+    private final IS3StorageService s3StorageService;
     private final Map<String, CompletableFuture<PessoaDTO>> pendentes = new ConcurrentHashMap<>();
 
 
     /**
-     * Método responsável por buscar Pessoa e arquivo pelo cpf da Pessoa no DynamoDB e posteriormente o arquivo no S3.
+     * Método responsável por buscar Pessoa e arquivo pelo cpf da Pessoa no DynamoDB.
      * @param cpf
      * @return PessoaDTO
      */
     @Override
-    public PessoaDTO buscarPessoa(String cpf) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+    public PessoaS3DTO buscarPessoa(String cpf) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
 
         String uuid = UUID.randomUUID().toString();
         JsonNode jsonNode = mapper.readTree(cpf);
@@ -58,7 +62,10 @@ public class PessoaConsultaServiceImpl implements IPessoaConsultaService {
         pessoaProducer.enviarToSQS(pessoaDTO);
 
         try {
-            return future.get(20, TimeUnit.SECONDS);
+            PessoaDTO dto =  future.get(20, TimeUnit.SECONDS);
+            String s3Presigner = s3StorageService.chamarUrlDownload(dto.getS3Key());
+            PessoaS3DTO pessoaS3DTO = PessoaMapper.PessoaDTOToPessoaS3DTO(dto, s3Presigner);
+            return pessoaS3DTO;
         } finally {
             pendentes.remove(valorCpf);
         }

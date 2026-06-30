@@ -1,5 +1,6 @@
 package com.pessoa.Mapper;
 
+import com.pessoa.dto.PessoaS3DTO;
 import com.pessoa.resources.avro.PessoaAvro;
 import com.pessoa.dto.PessoaDTO;
 import org.apache.avro.generic.GenericRecord;
@@ -24,6 +25,25 @@ public class PessoaMapper {
                 .setEventId(dto.getEventId())
                 .setEventType(dto.getEventType())
                 .setTimestamp(dto.getTimestamp() != null ? Instant.ofEpochMilli(dto.getTimestamp()) : null)
+                .build();
+    }
+
+    /**
+     * Método responsável mapear classe PessoaDTO para PessoaS3DTO.
+     * @param dto
+     * @param s3Presigner
+     * @return PessoaS3DTO
+     */
+    public static PessoaS3DTO PessoaDTOToPessoaS3DTO(PessoaDTO dto, String s3Presigner) {
+        return PessoaS3DTO.builder()
+                .id(dto.getId())
+                .nome(dto.getNome())
+                .cpf(dto.getCpf())
+                .s3Key(dto.getS3Key())
+                .s3PreSigner(s3Presigner)
+                .eventId(dto.getEventId())
+                .eventType(dto.getEventType())
+                .timestamp(dto.getTimestamp())
                 .build();
     }
 

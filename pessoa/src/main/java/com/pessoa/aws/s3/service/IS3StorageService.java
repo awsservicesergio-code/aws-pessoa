@@ -6,4 +6,5 @@ import java.io.IOException;
 
 public interface IS3StorageService {
      String enviarToS3(PessoaDTO pessoaDTO, MultipartFile file) throws IOException;
+     String chamarUrlDownload(String key);
 }

@@ -2,6 +2,7 @@ package com.pessoa.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pessoa.dto.PessoaDTO;
+import com.pessoa.dto.PessoaS3DTO;
 import com.pessoa.service.IPessoaConsultaService;
 import com.pessoa.service.IPessoaService;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,8 @@ public class PessoaResource {
      * @return ResponseEntity<PessoaDTO>
      */
     @PostMapping(path = "/buscar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PessoaDTO> getPessoa(@RequestBody String cpf) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseEntity<PessoaS3DTO> getPessoa(@RequestBody String cpf) throws JsonProcessingException, ExecutionException, InterruptedException, TimeoutException {
         return ResponseEntity.status(HttpStatus.OK).body(pessoaConsultaService.buscarPessoa(cpf));
     }
+
 }
