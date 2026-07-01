@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: pessoa
-
   profiles:
     active: local
 

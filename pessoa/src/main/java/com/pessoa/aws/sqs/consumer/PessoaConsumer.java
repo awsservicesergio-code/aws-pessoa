@@ -35,7 +35,6 @@ public class PessoaConsumer {
             pessoaConsultaService.responder(pessoaDTO.getCpf(), pessoaDTO); //Envia para o PessoaResource
         } catch (Exception ex) {
             pessoaProducer.enviarAvroEnvelopeToSqs(envelope, ex);
-            throw ex;
         }
 
     }

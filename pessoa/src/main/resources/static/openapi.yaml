@@ -111,6 +111,18 @@ components:
         s3Key:
           type: string
           "example": "12345678900/teste.pdf"
+        s3PreSigner:
+          type: string
+          "example": "http://pessoa-s3-local.s3.localhost.localstack.cloud:4566/94266841078/Teste.pdf?response-content-disposition..."
+        eventId:
+          type: string
+          "example": "f06a49ad-3759-4d2b-ae2a-eaf3fadae64e"
+        eventType:
+          type: string
+          "example": "CREATE"
+        timestamp:
+          type: string
+          "example": "30-06-2026 08:39:03"
   securitySchemes:
     KeycloakAuth:
       type: http
